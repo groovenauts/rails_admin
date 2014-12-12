@@ -41,6 +41,8 @@ module RailsAdmin
                 @object.send("#{name}=", value)
               end
 
+              @authorization_adapter.try(:authorize, :create, @abstract_model, @object)
+
               if @object.save
                 @auditing_adapter && @auditing_adapter.create_object(@object, @abstract_model, _current_user)
                 respond_to do |format|
