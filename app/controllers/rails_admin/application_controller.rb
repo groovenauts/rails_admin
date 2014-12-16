@@ -58,15 +58,29 @@ module RailsAdmin
     alias_method :user_for_paper_trail, :_current_user
 
     rescue_from RailsAdmin::ObjectNotFound do
-      flash[:error] = I18n.t('admin.flash.object_not_found', model: @model_name, id: params[:id])
-      params[:action] = 'index'
-      index
+      respond_to do |format|
+        format.html do
+          flash[:error] = I18n.t('admin.flash.object_not_found', model: @model_name, id: params[:id])
+          params[:action] = 'index'
+          index
+        end
+        b = Proc.new{ render json: { success: false, message: I18n.t('admin.flash.object_not_found', model: @model_name, id: params[:id]) }, status: :bad_request }
+        format.json(&b)
+        format.json(&b)
+      end
     end
 
     rescue_from RailsAdmin::ModelNotFound do
-      flash[:error] = I18n.t('admin.flash.model_not_found', model: @model_name)
-      params[:action] = 'dashboard'
-      dashboard
+      respond_to do |format|
+        format.html do
+          flash[:error] = I18n.t('admin.flash.model_not_found', model: @model_name)
+          params[:action] = 'dashboard'
+          dashboard
+        end
+        b = Proc.new{ render json: { success: false, message: I18n.t('admin.flash.object_not_found', model: @model_name, id: params[:id]) }, status: :bad_request }
+        format.json(&b)
+        format.json(&b)
+      end
     end
 
     def not_found
