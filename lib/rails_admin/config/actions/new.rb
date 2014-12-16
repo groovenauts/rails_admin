@@ -28,6 +28,7 @@ module RailsAdmin
               respond_to do |format|
                 format.html { render @action.template_name }
                 format.js   { render @action.template_name, layout: false }
+                format.json { render @action.template_name, layout: false }
               end
 
             elsif request.post? # CREATE
@@ -48,6 +49,7 @@ module RailsAdmin
                 respond_to do |format|
                   format.html { redirect_to_on_success }
                   format.js   { render json: {id: @object.id.to_s, label: @model_config.with(object: @object).object_label} }
+                  format.json { render json: {id: @object.id.to_s, label: @model_config.with(object: @object).object_label} }
                 end
               else
                 handle_save_error

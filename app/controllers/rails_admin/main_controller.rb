@@ -111,6 +111,7 @@ module RailsAdmin
       respond_to do |format|
         format.html { render whereto, status: :not_acceptable }
         format.js   { render whereto, layout: false, status: :not_acceptable  }
+        format.json { render json: { success: false, message: @object.errors.to_a.join("\n") }, status: :not_acceptable  }
       end
     end
 
