@@ -32,17 +32,23 @@ module RailsAdmin
             elsif request.delete? # DESTROY
 
               redirect_path = nil
+              success_destroy = false
               @auditing_adapter && @auditing_adapter.delete_object(@object, @abstract_model, _current_user)
               if @object.destroy
                 flash[:success] = t('admin.flash.successful', name: @model_config.label, action: t('admin.actions.delete.done'))
                 redirect_path = index_path
+                success_destroy = true
               else
                 flash[:error] = t('admin.flash.error', name: @model_config.label, action: t('admin.actions.delete.done'))
                 redirect_path = back_or_index
+                success_destroy = false
               end
 
-              redirect_to redirect_path
-
+              respond_to do |format|
+                format.html { redirect_to redirect_path }
+                format.js   { render json: {success: success_destroy} }
+                format.json { render json: {success: success_destroy} }
+              end
             end
           end
         end
