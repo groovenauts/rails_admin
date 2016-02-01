@@ -4,7 +4,7 @@ require 'rails_admin/config/fields/types/password'
 
 # Register a custom field factory for devise model
 RailsAdmin::Config::Fields.register_factory do |parent, properties, fields|
-  if properties.name == :encrypted_password
+  if properties.name == :encrypted_password and parent.abstract_model.model.public_instance_methods.include?(:password_confirmation=)
     extensions = [:password_salt, :reset_password_token, :remember_token]
     fields << RailsAdmin::Config::Fields::Types.load(:password).new(parent, :password, properties)
     fields << RailsAdmin::Config::Fields::Types.load(:password).new(parent, :password_confirmation, properties)
